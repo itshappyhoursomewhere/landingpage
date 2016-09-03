@@ -75,7 +75,7 @@ function validate() {
   return false;
 }
 
-$("form").bind("submit", validate);
+$("form").bind("validate", validate);
 
  
 
