@@ -1,3 +1,3 @@
 FROM nginx
-COPY landing/ /var/www
+COPY landing/ /usr/share/nginx/html
 CMD 'nginx'
