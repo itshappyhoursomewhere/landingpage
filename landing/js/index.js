@@ -26,15 +26,12 @@ $( document ).ready(function() {
         scaleBannerVideoSize('.video-container .poster img');
         scaleBannerVideoSize('.video-container .filter');
         scaleBannerVideoSize('.video-container video');
-        
-    sendEmailToApi.$form.on('submit', function(e){
-        e.preventDefault();
-        // Do more stuff here...
-    });
-});
-    });
 
-});
+        });
+      });
+   
+
+
 
 function scaleVideoContainer() {
 
