@@ -28726,7 +28726,7 @@ var Info = function (_React$Component) {
 
 exports.default = Info;
 
-},{"../stores/images.js":472,"react":466}],470:[function(require,module,exports){
+},{"../stores/images.js":473,"react":466}],470:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28747,6 +28747,10 @@ var _info = require("./info.jsx");
 var _info2 = _interopRequireDefault(_info);
 
 var _locations = require("../stores/locations.js");
+
+var _modal = require("./modal.jsx");
+
+var _modal2 = _interopRequireDefault(_modal);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28858,6 +28862,7 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
                 "div",
                 null,
                 this.state.loaded ? _react2.default.createElement("div", { className: "banner" }) : null,
+                this.state.loaded && !this.props.highAccuracyObtained ? _react2.default.createElement(_modal2.default, { message: "We are getting your location (please make shure your GPS is on)..." }) : null,
                 _react2.default.createElement("div", { ref: function ref(o) {
                         return _this5.container = o;
                     }, className: "map-container" }),
@@ -28877,7 +28882,54 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
 
 exports.default = Map;
 
-},{"../stores/locations.js":473,"./info.jsx":469,"react":466}],471:[function(require,module,exports){
+},{"../stores/locations.js":474,"./info.jsx":469,"./modal.jsx":471,"react":466}],471:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Model = function (_React$Component) {
+    _inherits(Model, _React$Component);
+
+    function Model() {
+        _classCallCheck(this, Model);
+
+        return _possibleConstructorReturn(this, (Model.__proto__ || Object.getPrototypeOf(Model)).apply(this, arguments));
+    }
+
+    _createClass(Model, [{
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "div",
+                { className: "modal" },
+                this.props.message
+            );
+        }
+    }]);
+
+    return Model;
+}(_react2.default.Component);
+
+exports.default = Model;
+
+},{"react":466}],472:[function(require,module,exports){
 "use strict";
 
 var _app = require("./components/app.jsx");
@@ -28896,7 +28948,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _reactDom2.default.render(_react2.default.createElement(_app2.default, null), document.getElementById("root"));
 
-},{"./components/app.jsx":468,"react":466,"react-dom":323}],472:[function(require,module,exports){
+},{"./components/app.jsx":468,"react":466,"react-dom":323}],473:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28935,7 +28987,7 @@ function grabImage(map, lat, long) {
     });
 }
 
-},{}],473:[function(require,module,exports){
+},{}],474:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28971,10 +29023,10 @@ var Locations = function () {
         this.lat = 0;
         this.lng = 0;
         this.locations = [];
+        this.highAccuracyObtained = false;
 
         this.onUpdateHandlers = [];
 
-        this.highAccuracyObtained = false;
         this.getGeneralCurrentPosition();
         this.getCurrentPosition().then(function () {
             _this.watchCurrentPosition();
@@ -29074,7 +29126,7 @@ function ProvideLocations(Elem) {
         _createClass(Provider, [{
             key: "render",
             value: function render() {
-                return _react2.default.createElement(Elem, _extends({}, this.props, { locations: LocationStore.locations, lat: LocationStore.lat, lng: LocationStore.lng }));
+                return _react2.default.createElement(Elem, _extends({}, this.props, { highAccuracyObtained: LocationStore.highAccuracyObtained, locations: LocationStore.locations, lat: LocationStore.lat, lng: LocationStore.lng }));
             }
         }]);
 
@@ -29082,7 +29134,7 @@ function ProvideLocations(Elem) {
     }(_react2.default.Component);
 }
 
-},{"../utils/ajax.js":474,"react":466}],474:[function(require,module,exports){
+},{"../utils/ajax.js":475,"react":466}],475:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29119,4 +29171,4 @@ var Post = exports.Post = function Post(url, data) {
     return Ajax("POST", url, data);
 };
 
-},{}]},{},[471])
+},{}]},{},[472])

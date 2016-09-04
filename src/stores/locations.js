@@ -6,10 +6,10 @@ class Locations {
         this.lat = 0;
         this.lng = 0;
         this.locations = [];
+        this.highAccuracyObtained = false;
 
         this.onUpdateHandlers = [];
 
-        this.highAccuracyObtained = false;
         this.getGeneralCurrentPosition()
         this.getCurrentPosition().then(
             () => {
@@ -97,7 +97,7 @@ export function ProvideLocations(Elem) {
         }
 
         render() {
-            return <Elem {...this.props} locations={LocationStore.locations} lat={LocationStore.lat} lng={LocationStore.lng} />;
+            return <Elem {...this.props} highAccuracyObtained={LocationStore.highAccuracyObtained} locations={LocationStore.locations} lat={LocationStore.lat} lng={LocationStore.lng} />;
         }
     }
 }
