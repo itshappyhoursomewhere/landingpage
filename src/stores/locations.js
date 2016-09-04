@@ -31,7 +31,11 @@ class Locations {
             (results) => JSON.parse(results)
         ).then(
             (results) => this.merge(results.locations)
-        )
+        ).then(
+            () => {
+                this.onUpdateHandlers.forEach((func) => func());
+            }
+        );
     }
 
     merge(results) {
@@ -54,11 +58,7 @@ class Locations {
     updateLocation(loc) {
         this.lat = loc.coords.latitude
         this.lng = loc.coords.longitude
-        this.pull().then(
-            () => {
-                this.onUpdateHandlers.forEach((func) => func());
-            }
-        );
+        this.pull()
     }
 
     getGeneralCurrentPosition() {
