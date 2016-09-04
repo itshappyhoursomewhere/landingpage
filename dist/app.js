@@ -28805,7 +28805,8 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
             var marker = new google.maps.Marker({
                 position: { lat: loc.geo.lat, lng: loc.geo.long },
                 map: this.map,
-                image: loc.icon ? 'https://tippleldn.tech/public/' + loc.icon + '.png' : undefined
+                image: loc.icon ? 'https://tippleldn.tech/public/' + loc.icon + '.png' : 'https://tippleldn.tech/public/Multiple.png',
+                zIndex: 100
             });
 
             marker.addListener('click', function () {
@@ -28984,13 +28985,13 @@ var Locations = function () {
                 }, function (err) {
                     console.error(err);
                     rej(err);
-                }, { maximumAge: 60000, timeout: 5000, enableHighAccuracy: true });
+                }, { maximumAge: 60000, enableHighAccuracy: true });
             });
         }
     }, {
         key: "watchCurrentPosition",
         value: function watchCurrentPosition() {
-            navigator.geolocation.watchPosition(this.updateLocation.bind(this), console.error, { maximumAge: 60000, timeout: 5000, enableHighAccuracy: true });
+            navigator.geolocation.watchPosition(this.updateLocation.bind(this), console.error, { maximumAge: 60000, enableHighAccuracy: true });
         }
     }]);
 
