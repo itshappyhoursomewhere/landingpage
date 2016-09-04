@@ -28770,7 +28770,7 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
 
         var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
 
-        _this.state = { info: null, loaded: false };
+        _this.state = { info: null, loaded: false, locked: true };
         _this.locations = [];
         return _this;
     }
@@ -28788,7 +28788,6 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
                 navigationControl: false,
                 mapTypeControl: false,
                 scaleControl: false,
-                draggable: false,
                 styles: styles,
                 streetViewControl: false
             });
@@ -28799,6 +28798,9 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
                 map: this.map,
                 icon: image
             });
+
+            google.maps.event.addListener(this.map, 'dragstart', this.unlock.bind(this));
+            google.maps.event.addListener(this.map, 'dragend', this.dragged.bind(this));
 
             google.maps.event.addListener(this.map, 'tilesloaded', function (e) {
                 _this2.setState({ loaded: true });
@@ -28813,13 +28815,21 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
             var _this3 = this;
 
             var panPoint = new google.maps.LatLng(props.lat, props.lng);
-            this.map.panTo(panPoint);
+            if (this.state.locked) {
+                this.map.panTo(panPoint);
+            }
             this.clearLocations();
 
             this.marker.setPosition({ lat: props.lat, lng: props.lng });
             props.locations.forEach(function (loc) {
                 return _this3.processLocation(loc);
             });
+        }
+    }, {
+        key: "dragged",
+        value: function dragged() {
+            var center = this.map.getCenter();
+            _locations.LocationStore.add(center.lat(), center.lng());
         }
     }, {
         key: "clearLocations",
@@ -28854,19 +28864,32 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
             this.locations.push(marker);
         }
     }, {
+        key: "unlock",
+        value: function unlock() {
+            this.setState({ locked: false });
+        }
+    }, {
+        key: "recenter",
+        value: function recenter() {
+            this.setState({ locked: true });
+            var panPoint = new google.maps.LatLng(this.props.lat, this.props.lng);
+            this.map.panTo(panPoint);
+        }
+    }, {
         key: "render",
         value: function render() {
             var _this5 = this;
 
             return _react2.default.createElement(
                 "div",
-                null,
+                { className: "map" },
                 this.state.loaded ? _react2.default.createElement("div", { className: "banner" }) : null,
                 this.state.loaded && !this.props.highAccuracyObtained ? _react2.default.createElement(_modal2.default, { message: "We are getting your location (please make sure your GPS is on)..." }) : null,
                 _react2.default.createElement("div", { ref: function ref(o) {
                         return _this5.container = o;
                     }, className: "map-container" }),
-                this.state.info
+                this.state.info,
+                this.state.loaded ? _react2.default.createElement("div", { className: "map__center", onClick: this.recenter.bind(this) }) : null
             );
         }
     }]);
@@ -28993,6 +29016,7 @@ function grabImage(map, lat, long) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.LocationStore = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -29041,13 +29065,36 @@ var Locations = function () {
     }, {
         key: "pull",
         value: function pull() {
+            return this.add(this.lat, this.lng);
+        }
+    }, {
+        key: "add",
+        value: function add(lat, lng) {
             var _this2 = this;
 
-            return (0, _ajax.Post)("https://tippleldn.tech/data.json", JSON.stringify({ lat: this.lat, long: this.lng })).then(function (results) {
+            return (0, _ajax.Post)("https://tippleldn.tech/data.json", JSON.stringify({ lat: lat, long: lng })).then(function (results) {
                 return JSON.parse(results);
             }).then(function (results) {
-                _this2.locations = results.locations;
+                return _this2.merge(results.locations);
             });
+        }
+    }, {
+        key: "merge",
+        value: function merge(results) {
+            this.locations.forEach(function (existing) {
+                var overwrite = false;
+                results.forEach(function (pulled) {
+                    if (existing.name == pulled.name) {
+                        overwrite = true;
+                    }
+                });
+
+                if (!overwrite) {
+                    results.push(existing);
+                }
+            });
+
+            this.locations = results;
         }
     }, {
         key: "updateLocation",
@@ -29107,6 +29154,7 @@ var Locations = function () {
 
 var LocationStore = new Locations();
 
+exports.LocationStore = LocationStore;
 exports.default = LocationStore;
 function ProvideLocations(Elem) {
     return function (_React$Component) {

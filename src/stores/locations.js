@@ -23,11 +23,32 @@ class Locations {
     }
 
     pull() {
-        return Post("https://tippleldn.tech/data.json", JSON.stringify({lat: this.lat, long: this.lng})).then(
+        return this.add(this.lat, this.lng)
+    }
+
+    add(lat, lng) {
+        return Post("https://tippleldn.tech/data.json", JSON.stringify({lat: lat, long: lng})).then(
             (results) => JSON.parse(results)
         ).then(
-            (results) => {this.locations = results.locations} 
+            (results) => this.merge(results.locations)
         )
+    }
+
+    merge(results) {
+        this.locations.forEach((existing) => {
+            let overwrite = false;
+            results.forEach((pulled) => {
+                if (existing.name == pulled.name) {
+                    overwrite = true;
+                }
+            });
+
+            if (!overwrite) {
+                results.push(existing)
+            }
+        })
+
+        this.locations = results;
     }
 
     updateLocation(loc) {
@@ -86,7 +107,8 @@ class Locations {
 
 const LocationStore = new Locations();
 
-export default LocationStore
+export {LocationStore};
+export default LocationStore;
 
 export function ProvideLocations(Elem) {
     return class Provider extends React.Component {
