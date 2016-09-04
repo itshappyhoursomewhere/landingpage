@@ -10,9 +10,7 @@ class Locations {
         this.onUpdateHandlers = [];
 
         this.highAccuracyObtained = false;
-
         this.getGeneralCurrentPosition()
-
         this.getCurrentPosition().then(
             () => {
                 this.watchCurrentPosition()

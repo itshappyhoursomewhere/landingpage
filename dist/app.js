@@ -28643,13 +28643,24 @@ var Info = function (_React$Component) {
             var day = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][now.getDay()];
             var hour = now.getHours() + now.getMinutes() / 60;
 
+            var offers = [];
+
             var description = "";
             var remaining = "No deals right now!";
             this.props.location.deals.forEach(function (deal) {
                 deal.active.forEach(function (a) {
                     if (a.day == day && a.start < hour && a.end > hour) {
-                        description = deal.description;
-                        remaining = ((a.end - hour) * 60).toFixed(0) + " minutes left";
+                        var _remaining = ((a.end - hour) * 60).toFixed(0);
+                        var suffix = " minutes left";
+                        if (_remaining > 60) {
+                            _remaining = (_remaining / 60).toFixed(1);
+                            suffix = " hours left";
+                        }
+
+                        offers.push({
+                            description: deal.description,
+                            remaining: _remaining + suffix
+                        });
                     }
                 });
             });
@@ -28669,22 +28680,43 @@ var Info = function (_React$Component) {
                         "div",
                         { className: "location-info__header__title" },
                         this.props.location.name
-                    )
-                ),
-                _react2.default.createElement(
-                    "div",
-                    { className: "location-info__ttl" },
-                    _react2.default.createElement(
-                        "div",
-                        { className: "location-info__ttl__title" },
-                        description
                     ),
                     _react2.default.createElement(
                         "div",
-                        { className: "location-info__ttl__info" },
-                        remaining
+                        { className: "location-info__header__tags" },
+                        this.props.location.filter.join(", ")
                     )
-                )
+                ),
+                this.props.location.description ? _react2.default.createElement(
+                    "div",
+                    { className: "location-info__description hr" },
+                    _react2.default.createElement(
+                        "p",
+                        null,
+                        this.props.location.description
+                    )
+                ) : null,
+                offers.map(function (offer) {
+                    return _react2.default.createElement(
+                        "div",
+                        { className: "location-info__ttl hr" },
+                        _react2.default.createElement(
+                            "div",
+                            { className: "location-ingo__ttl__title" },
+                            "Happy hour"
+                        ),
+                        _react2.default.createElement(
+                            "div",
+                            { className: "location-info__ttl__description" },
+                            offer.description
+                        ),
+                        _react2.default.createElement(
+                            "div",
+                            { className: "location-info__ttl__ttl" },
+                            offer.remaining
+                        )
+                    );
+                })
             );
         }
     }]);
@@ -28943,9 +28975,7 @@ var Locations = function () {
         this.onUpdateHandlers = [];
 
         this.highAccuracyObtained = false;
-
         this.getGeneralCurrentPosition();
-
         this.getCurrentPosition().then(function () {
             _this.watchCurrentPosition();
         });
