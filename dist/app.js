@@ -21275,7 +21275,7 @@ var Locations = function () {
         value: function pull() {
             var _this2 = this;
 
-            return (0, _ajax.Post)("http://localhost/data.json", JSON.stringify({ lat: this.lat, long: this.lng })).then(function (results) {
+            return (0, _ajax.Post)("/data.json", JSON.stringify({ lat: this.lat, long: this.lng })).then(function (results) {
                 return JSON.parse(results);
             }).then(function (results) {
                 _this2.locations = results.locations;
