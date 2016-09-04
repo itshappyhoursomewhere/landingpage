@@ -2,6 +2,7 @@ import React from "react"
 import Info from "./info.jsx"
 import {LocationStore, ProvideLocations} from "../stores/locations.js"
 import Modal from "./modal.jsx"
+import Filters from "./filters.jsx"
 
 let styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#e9e9e9"},{"lightness":17}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":20}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffffff"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#ffffff"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":16}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":21}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#dedede"},{"lightness":21}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#ffffff"},{"lightness":16}]},{"elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#333333"},{"lightness":40}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#f2f2f2"},{"lightness":19}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#fefefe"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#fefefe"},{"lightness":17},{"weight":1.2}]}]
 
@@ -19,7 +20,7 @@ export default class Map extends React.Component {
 
     constructor(props){
         super(props)
-        this.state = {info: null, loaded:false, locked:true}
+        this.state = {info: null, loaded:false, locked:true, filters: false}
         this.locations = [];
     }
 
@@ -103,6 +104,14 @@ export default class Map extends React.Component {
         this.map.panTo(panPoint)
     }
 
+    showFilter() {
+        this.setState({filters:true})
+    }
+
+    hideFilter() {
+        this.setState({filters:false})
+    }
+
     render() {
         return (
             <div className="map">
@@ -111,6 +120,8 @@ export default class Map extends React.Component {
                 <div ref={(o) => this.container = o} className="map-container" />
                 {this.state.info}
                 {this.state.loaded ? <div className="map__center" onClick={this.recenter.bind(this)} /> : null }
+                {this.state.loaded ? <div className="map__filter" onClick={this.showFilter.bind(this)} /> : null }
+                {this.state.filters ? <Filters onClose={this.hideFilter.bind(this)} /> : null }
             </div>
         );
     }

@@ -6,6 +6,7 @@ class Locations {
         this.lat = 0;
         this.lng = 0;
         this.locations = [];
+        this.filters = {};
         this.highAccuracyObtained = false;
 
         this.onUpdateHandlers = [];
@@ -16,6 +17,28 @@ class Locations {
                 this.watchCurrentPosition()
             }
         )
+    }
+
+    getLocations() {
+        let results = [];
+        let hasFilters = false;
+        this.locations.forEach((loc) => {
+            for (let key of Object.keys(this.filters)) {
+                if (this.filters[key]) {
+                    hasFilters = true;
+                    if (loc.filter.includes(key)) {
+                        results.push(loc);
+                        break;
+                    }
+                }
+            }
+        })
+        return hasFilters ? results : this.locations;
+    }
+    
+    toggleFilter(filter, value) {
+        this.filters[filter] = value;
+        this.onUpdateHandlers.forEach((func) => func());        
     }
 
     onUpdate(func) {
@@ -119,7 +142,7 @@ export function ProvideLocations(Elem) {
         }
 
         render() {
-            return <Elem {...this.props} highAccuracyObtained={LocationStore.highAccuracyObtained} locations={LocationStore.locations} lat={LocationStore.lat} lng={LocationStore.lng} />;
+            return <Elem {...this.props} highAccuracyObtained={LocationStore.highAccuracyObtained} locations={LocationStore.getLocations()} lat={LocationStore.lat} lng={LocationStore.lng} />;
         }
     }
 }
