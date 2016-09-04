@@ -88,7 +88,7 @@ export default class Map extends React.Component {
         return (
             <div>
                 {this.state.loaded ? <div className="banner" /> : null }
-                {this.state.loaded && !this.props.highAccuracyObtained ? <Modal message="We are getting your location (please make shure your GPS is on)..." /> : null }
+                {this.state.loaded && !this.props.highAccuracyObtained ? <Modal message="We are getting your location (please make sure your GPS is on)..." /> : null }
                 <div ref={(o) => this.container = o} className="map-container" />
                 {this.state.info}
             </div>

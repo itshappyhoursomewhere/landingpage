@@ -28862,7 +28862,7 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
                 "div",
                 null,
                 this.state.loaded ? _react2.default.createElement("div", { className: "banner" }) : null,
-                this.state.loaded && !this.props.highAccuracyObtained ? _react2.default.createElement(_modal2.default, { message: "We are getting your location (please make shure your GPS is on)..." }) : null,
+                this.state.loaded && !this.props.highAccuracyObtained ? _react2.default.createElement(_modal2.default, { message: "We are getting your location (please make sure your GPS is on)..." }) : null,
                 _react2.default.createElement("div", { ref: function ref(o) {
                         return _this5.container = o;
                     }, className: "map-container" }),
@@ -28904,16 +28904,16 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Model = function (_React$Component) {
-    _inherits(Model, _React$Component);
+var Modal = function (_React$Component) {
+    _inherits(Modal, _React$Component);
 
-    function Model() {
-        _classCallCheck(this, Model);
+    function Modal() {
+        _classCallCheck(this, Modal);
 
-        return _possibleConstructorReturn(this, (Model.__proto__ || Object.getPrototypeOf(Model)).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Modal.__proto__ || Object.getPrototypeOf(Modal)).apply(this, arguments));
     }
 
-    _createClass(Model, [{
+    _createClass(Modal, [{
         key: "render",
         value: function render() {
             return _react2.default.createElement(
@@ -28924,10 +28924,10 @@ var Model = function (_React$Component) {
         }
     }]);
 
-    return Model;
+    return Modal;
 }(_react2.default.Component);
 
-exports.default = Model;
+exports.default = Modal;
 
 },{"react":466}],472:[function(require,module,exports){
 "use strict";
