@@ -28805,7 +28805,7 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
             var marker = new google.maps.Marker({
                 position: { lat: loc.geo.lat, lng: loc.geo.long },
                 map: this.map,
-                image: loc.icon ? 'https://tippleldn.tech/public/' + loc.icon + '.png' : 'https://tippleldn.tech/public/Multiple.png',
+                icon: loc.icon ? 'https://tippleldn.tech/public/' + loc.icon + '.png' : 'https://tippleldn.tech/public/Multiple.png',
                 zIndex: 100
             });
 
@@ -28939,6 +28939,10 @@ var Locations = function () {
 
         this.onUpdateHandlers = [];
 
+        this.highAccuracyObtained = false;
+
+        this.getGeneralCurrentPosition();
+
         this.getCurrentPosition().then(function () {
             _this.watchCurrentPosition();
         });
@@ -28974,13 +28978,31 @@ var Locations = function () {
             });
         }
     }, {
-        key: "getCurrentPosition",
-        value: function getCurrentPosition() {
+        key: "getGeneralCurrentPosition",
+        value: function getGeneralCurrentPosition() {
             var _this4 = this;
 
             return new Promise(function (res, rej) {
                 navigator.geolocation.getCurrentPosition(function (loc) {
-                    _this4.updateLocation(loc);
+                    if (!_this4.highAccuracyObtained) {
+                        _this4.updateLocation(loc);
+                    }
+                    res(loc);
+                }, function (err) {
+                    console.error(err);
+                    rej(err);
+                }, { maximumAge: 60000 });
+            });
+        }
+    }, {
+        key: "getCurrentPosition",
+        value: function getCurrentPosition() {
+            var _this5 = this;
+
+            return new Promise(function (res, rej) {
+                navigator.geolocation.getCurrentPosition(function (loc) {
+                    _this5.highAccuracyObtained = true;
+                    _this5.updateLocation(loc);
                     res(loc);
                 }, function (err) {
                     console.error(err);
@@ -29008,12 +29030,12 @@ function ProvideLocations(Elem) {
         function Provider(props) {
             _classCallCheck(this, Provider);
 
-            var _this5 = _possibleConstructorReturn(this, (Provider.__proto__ || Object.getPrototypeOf(Provider)).call(this, props));
+            var _this6 = _possibleConstructorReturn(this, (Provider.__proto__ || Object.getPrototypeOf(Provider)).call(this, props));
 
             LocationStore.onUpdate(function () {
-                return _this5.forceUpdate();
+                return _this6.forceUpdate();
             });
-            return _this5;
+            return _this6;
         }
 
         _createClass(Provider, [{

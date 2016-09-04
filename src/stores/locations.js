@@ -9,6 +9,10 @@ class Locations {
 
         this.onUpdateHandlers = [];
 
+        this.highAccuracyObtained = false;
+
+        this.getGeneralCurrentPosition()
+
         this.getCurrentPosition().then(
             () => {
                 this.watchCurrentPosition()
@@ -38,10 +42,29 @@ class Locations {
         );
     }
 
+    getGeneralCurrentPosition() {
+        return new Promise((res, rej) => {
+            navigator.geolocation.getCurrentPosition(
+                (loc) => {
+                    if (!this.highAccuracyObtained) {
+                        this.updateLocation(loc) 
+                    }
+                    res(loc);
+                },
+                (err) => {
+                    console.error(err)
+                    rej(err)
+                },
+                {maximumAge:60000}
+            );
+        });
+    }
+
     getCurrentPosition() {
         return new Promise((res, rej) => {
             navigator.geolocation.getCurrentPosition(
                 (loc) => {       
+                    this.highAccuracyObtained = true;
                     this.updateLocation(loc) 
                     res(loc);
                 },
