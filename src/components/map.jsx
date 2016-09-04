@@ -82,7 +82,7 @@ export default class Map extends React.Component {
     render() {
         return (
             <div>
-                <div ref={(o) => this.container = o} className="map-container" />;
+                <div ref={(o) => this.container = o} className="map-container" />
                 {this.state.info}
             </div>
         );
