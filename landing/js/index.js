@@ -26,9 +26,12 @@ $( document ).ready(function() {
         scaleBannerVideoSize('.video-container .poster img');
         scaleBannerVideoSize('.video-container .filter');
         scaleBannerVideoSize('.video-container video');
-    });
 
-});
+        });
+      });
+   
+
+
 
 function scaleVideoContainer() {
 
@@ -48,6 +51,34 @@ function initBannerVideoSize(element){
     scaleBannerVideoSize(element);
 
 }
+
+function validateEmail(email) {
+  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
+function onSuccess() {
+    
+}
+
+function validate() {
+  $("#result").text("");
+  var email = $("#email").val();
+  if (validateEmail(email)) {
+    $("#result").text(email + " is valid :)");
+    $("#result").css("color", "green");
+    $.post(customerEmail.json, JSON.stringify({email: email}), onSuccess)
+    return true;
+  } 
+  $("#result").text(email + " is not valid :(");
+  $("#result").css("color", "red");
+  return false;
+}
+
+$("form").bind("validate", validate);
+
+ 
+
 
 function scaleBannerVideoSize(element){
 
