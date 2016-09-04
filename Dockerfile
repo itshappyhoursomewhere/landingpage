@@ -1,6 +1,6 @@
 FROM abiosoft/caddy
 
-COPY Caddyfile /etc/Caddyfile
+COPY ./Caddyfile /etc/Caddyfile
 COPY landing/ /html
 COPY dist/ /html/dist
 COPY public/ /html/public
