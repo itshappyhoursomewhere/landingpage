@@ -70,7 +70,7 @@ export default class Map extends React.Component {
         var marker = new google.maps.Marker({
           position: {lat: loc.geo.lat, lng: loc.geo.long},
           map: this.map,
-          image: loc.icon ? 'https://tippleldn.tech/public/' + loc.icon + '.png' : 'https://tippleldn.tech/public/Multiple.png', 
+          icon: loc.icon ? 'https://tippleldn.tech/public/' + loc.icon + '.png' : 'https://tippleldn.tech/public/Multiple.png', 
           zIndex: 100
         });
 
