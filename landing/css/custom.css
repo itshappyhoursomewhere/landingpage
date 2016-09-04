@@ -1,0 +1,58 @@
+/* Custom CSS */
+
+body {
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Roboto', sans-serif;
+}
+
+p, div {
+	font-family: 'Roboto', sans-serif;
+}
+
+#background {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    background: url(polina.jpg) no-repeat;
+    background-size: cover;
+}
+
+.row1 {
+	height: 100px;
+}
+
+.text-white {
+	color:white;
+}
+
+#custom-div {
+	padding-left:0;
+}
+
+#img-logo {
+	height:75px;
+}
+
+.center {
+	border: none;
+    display: block;
+    margin: 0 auto;
+    text-align:center;
+}
+
+#txt1 {
+	max-width: 30%;
+}
+
+#btn-emil {
+	max-width: 30px;
+}
