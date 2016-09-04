@@ -21,7 +21,7 @@ class Locations {
     }
 
     pull() {
-        return Post("http://localhost/data.json", JSON.stringify({lat: this.lat, long: this.lng})).then(
+        return Post("http://tippleldn.tech:6070/data.json", JSON.stringify({lat: this.lat, long: this.lng})).then(
             (results) => JSON.parse(results)
         ).then(
             (results) => {this.locations = results.locations} 
