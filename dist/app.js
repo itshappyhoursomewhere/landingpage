@@ -28734,7 +28734,7 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
 
         var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
 
-        _this.state = { info: null };
+        _this.state = { info: null, loaded: false };
         _this.locations = [];
         return _this;
     }
@@ -28753,7 +28753,8 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
                 mapTypeControl: false,
                 scaleControl: false,
                 draggable: false,
-                styles: styles
+                styles: styles,
+                streetViewControl: false
             });
 
             var image = 'https://tippleldn.tech/public/current_loc.png';
@@ -28763,7 +28764,8 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
                 icon: image
             });
 
-            google.maps.event.addListener(this.map, 'google-map-ready', function (e) {
+            google.maps.event.addListener(this.map, 'tilesloaded', function (e) {
+                _this2.setState({ loaded: true });
                 _this2.props.locations.forEach(function (loc) {
                     return _this2.processLocation(loc);
                 });
@@ -28823,6 +28825,7 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
             return _react2.default.createElement(
                 "div",
                 null,
+                this.state.loaded ? _react2.default.createElement("div", { className: "banner" }) : null,
                 _react2.default.createElement("div", { ref: function ref(o) {
                         return _this5.container = o;
                     }, className: "map-container" }),

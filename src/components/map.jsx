@@ -18,7 +18,7 @@ export default class Map extends React.Component {
 
     constructor(props){
         super(props)
-        this.state = {info: null}
+        this.state = {info: null, loaded:false}
         this.locations = [];
     }
 
@@ -32,7 +32,8 @@ export default class Map extends React.Component {
             mapTypeControl: false,
             scaleControl: false,
             draggable: false,
-            styles: styles
+            styles: styles,
+            streetViewControl: false
         });
 
         var image = 'https://tippleldn.tech/public/current_loc.png';
@@ -42,7 +43,8 @@ export default class Map extends React.Component {
             icon: image
         });
 
-        google.maps.event.addListener(this.map, 'google-map-ready', (e) => {
+        google.maps.event.addListener(this.map, 'tilesloaded', (e) => {
+            this.setState({loaded:true})
             this.props.locations.forEach((loc) => this.processLocation(loc))
         });
    }
@@ -84,6 +86,7 @@ export default class Map extends React.Component {
     render() {
         return (
             <div>
+                {this.state.loaded ? <div className="banner" /> : null }
                 <div ref={(o) => this.container = o} className="map-container" />
                 {this.state.info}
             </div>
