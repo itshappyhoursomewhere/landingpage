@@ -21078,7 +21078,7 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
                 styles: styles
             });
 
-            var image = 'http://i.stack.imgur.com/orZ4x.png';
+            var image = 'https://tippleldn.tech/public/current_loc.png';
             this.marker = new google.maps.Marker({
                 position: { lat: this.props.lat, lng: this.props.lng },
                 map: this.map,
@@ -21126,7 +21126,8 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
             console.log("Adding location", loc);
             var marker = new google.maps.Marker({
                 position: { lat: loc.geo.lat, lng: loc.geo.long },
-                map: this.map
+                map: this.map,
+                image: loc.icon ? 'https://tippleldn.tech/public/' + loc.icon + '.png' : undefined
             });
 
             marker.addListener('click', function () {
