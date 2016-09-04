@@ -49,7 +49,7 @@ class Locations {
                     console.error(err)
                     rej(err)
                 },
-                { enableHighAccuracy: true }
+                {maximumAge:60000, timeout:5000, enableHighAccuracy:true}
             );
         });
     }
@@ -58,7 +58,7 @@ class Locations {
         navigator.geolocation.watchPosition(
             this.updateLocation.bind(this), 
             console.error, 
-            { enableHighAccuracy: true }
+            {maximumAge:60000, timeout:5000, enableHighAccuracy:true}
         );
     }
 }

@@ -28984,13 +28984,13 @@ var Locations = function () {
                 }, function (err) {
                     console.error(err);
                     rej(err);
-                }, { enableHighAccuracy: true });
+                }, { maximumAge: 60000, timeout: 5000, enableHighAccuracy: true });
             });
         }
     }, {
         key: "watchCurrentPosition",
         value: function watchCurrentPosition() {
-            navigator.geolocation.watchPosition(this.updateLocation.bind(this), console.error, { enableHighAccuracy: true });
+            navigator.geolocation.watchPosition(this.updateLocation.bind(this), console.error, { maximumAge: 60000, timeout: 5000, enableHighAccuracy: true });
         }
     }]);
 
