@@ -1,4 +1,6 @@
-http://tippleldn.tech, http://www.tippleldn.tech, https://tippleldn.tech, https://www.tippleldn.tech 
-gzip
-tls adamtalbot93@googlemail.com
-root /html
+http://tippleldn.tech, http://www.tippleldn.tech, https://tippleldn.tech, https://www.tippleldn.tech {
+    gzip
+    tls adamtalbot93@googlemail.com
+    root /html
+    proxy /data.json tippleldn.tech:6070
+}
