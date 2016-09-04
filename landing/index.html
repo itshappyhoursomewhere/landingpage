@@ -13,6 +13,10 @@
 
 <link href="libs/jq.css" rel="stylesheet">      <!-- JQuery -->
 <link href="libs/bs.min.css" rel="stylesheet">	<!-- Bootstrap -->
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+<link href="libs/bootstrap-social.css" rel="stylesheet">	<!-- Bootstrap -->
+
 <link href="libs/leaflet.css" rel="stylesheet"> <!-- Leaflet -->
 <link href="css/custom.css" rel="stylesheet">   <!-- CSS -->
 <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">   <!-- Custom Font -->
@@ -23,50 +27,60 @@
 
 <body>
 
-
-
 <div class = "container-fluid">
 
-	<div class = "row row1"></div>
+	<div class = "row row1 col-md-12"></div>
 
 	<div class = "row">
 		<div class = "col-md-2"></div><!-- Left Border -->
 
 		<!-- Logo -->
 
-		<div class = "col-md-6">
+		<div class = "col-md-5">
 			<img id = "img-logo" class = "img-responsive" src="img/logo_v1.png">
 			<br/>
-			<h5 class = "text-white">It's always happy hour somewhere...</h5>
+			<h3 class = "text-white">"It's always happy hour somewhere..."</h3>
 			<br/>
-			<p class = "text-white">Helping you find the best happy hours and drinks deals near you. Sign up to hear the latest on how you can get a tipple in London.</p>
+			<h4 class = "text-white">Find the best happy hours and drinks deals near you. Sign up to hear the latest on how you can have a tipple in London.</h4>
 			<br/>
 
-
-			<div class = "col-md-4">
-				<div class="input-group">
-					<input id='email' input type="text" class="form-control" placeholder="Your email">
-					<span class="input-group-btn">
-					<button class="btn btn-warning" type="button" id='validate'>Sign me up!</button>
-					</span>
-				</div>
+			<div id = "input-email" class="input-group col-md-10">
+				<input type="text" class="form-control" placeholder="Your email">
+				<span class="input-group-btn">
+				<button class="btn btn-warning" type="button" id = "btn-email">Sign me up!</button>
+				</span>
 			</div>
-			<div class = "col-md-2"></div>
 
-	    </div>
-\
+			<br/>
+			<div class = "center">
+				<a class="btn btn-social btn-twitter btn-custom btn-email" id = "btn-twitter">
+				<span class="fa fa-twitter"></span>
+					Follow us on Twitter
+				</a>
+				
+				<a class="center btn btn-social btn-facebook btn-custom btn-email" id = "btn-facebook">
+				<span class="fa fa-facebook"></span>
+					Like us on Facebook
+				</a>
+		</div>
+
+
+
+
 		<!-- Phone Image -->
 
-		<div class = "col-md-4">
+		<div class = "col-md-5">
+		<section class="hidden-sm hidden-xs">
 			<img class = "img-responsive center" src = "img/mockup.png">
 			<br/>
 			<br/>
 			<br/>
+		</section>
 		</div>
 
 
 		<div class = "col-md-2"></div><!-- Right Border -->
-
+	</div>
 
     <video autoplay loop muted poster="screenshot.jpg" id="background">
         <source src="https://s3-eu-west-1.amazonaws.com/lhh/blurry-night.mp4" type="video/mp4">
@@ -91,6 +105,7 @@
 <script src="libs/hc.js"></script>			    <!-- Highcharts -->
 <script src="libs/hc-exp.js"></script>			<!-- Highcharts Exporting -->
 <script src="libs/leaflet.js"></script>			<!-- Highcharts Exporting -->
+<script src="libs/generate.js"></script>		<!-- Highcharts Exporting -->
 <script src="js/index.js"></script>             <!-- Custom JS -->
 
 <!-- <script src="libs/hm.js"></script>			Highmaps -->

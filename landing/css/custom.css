@@ -42,6 +42,12 @@ p, div {
 	height:75px;
 }
 
+#input-email {
+    margin-left:0;
+}
+
+.btn-
+
 .center {
 	border: none;
     display: block;
@@ -53,6 +59,8 @@ p, div {
 	max-width: 30%;
 }
 
-#btn-emil {
-	max-width: 30px;
+.btn-email {
+	max-width: 49%;
+    margin-top:10px;
+    margin-bottom:20px;
 }
