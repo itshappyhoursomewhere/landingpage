@@ -28575,7 +28575,115 @@ var App = function (_React$Component) {
 
 exports.default = App;
 
-},{"./map.jsx":470,"babel-polyfill":1,"react":466}],469:[function(require,module,exports){
+},{"./map.jsx":471,"babel-polyfill":1,"react":466}],469:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _locations = require("../stores/locations.js");
+
+var _locations2 = _interopRequireDefault(_locations);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Filter = function (_React$Component) {
+    _inherits(Filter, _React$Component);
+
+    function Filter() {
+        _classCallCheck(this, Filter);
+
+        return _possibleConstructorReturn(this, (Filter.__proto__ || Object.getPrototypeOf(Filter)).apply(this, arguments));
+    }
+
+    _createClass(Filter, [{
+        key: "render",
+        value: function render() {
+            var _this2 = this;
+
+            return _react2.default.createElement(
+                "div",
+                { className: "filter hr" },
+                _react2.default.createElement(
+                    "div",
+                    { className: "filter__label" },
+                    this.props.label
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "filter__checkbox" },
+                    _react2.default.createElement("input", { type: "checkbox", checked: _locations2.default.filters[this.props.filter], onChange: function onChange(e) {
+                            return _locations2.default.toggleFilter(_this2.props.filter, e.target.checked);
+                        } })
+                )
+            );
+        }
+    }]);
+
+    return Filter;
+}(_react2.default.Component);
+
+var Filters = function (_React$Component2) {
+    _inherits(Filters, _React$Component2);
+
+    function Filters() {
+        _classCallCheck(this, Filters);
+
+        return _possibleConstructorReturn(this, (Filters.__proto__ || Object.getPrototypeOf(Filters)).apply(this, arguments));
+    }
+
+    _createClass(Filters, [{
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "div",
+                { className: "filters" },
+                _react2.default.createElement(
+                    "div",
+                    { className: "filters__header" },
+                    _react2.default.createElement("div", { className: "filters__header__back", onClick: this.props.onClose }),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "filters__header__title" },
+                        "Filter"
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "filters__type" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "filters__type__title" },
+                        "Type"
+                    ),
+                    _react2.default.createElement(Filter, { label: "Beer", filter: "Beer" }),
+                    _react2.default.createElement(Filter, { label: "Cocktails", filter: "Cocktails" }),
+                    _react2.default.createElement(Filter, { label: "Wine", filter: "Wine" })
+                )
+            );
+        }
+    }]);
+
+    return Filters;
+}(_react2.default.Component);
+
+exports.default = Filters;
+
+},{"../stores/locations.js":475,"react":466}],470:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28643,13 +28751,24 @@ var Info = function (_React$Component) {
             var day = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][now.getDay()];
             var hour = now.getHours() + now.getMinutes() / 60;
 
+            var offers = [];
+
             var description = "";
             var remaining = "No deals right now!";
             this.props.location.deals.forEach(function (deal) {
                 deal.active.forEach(function (a) {
                     if (a.day == day && a.start < hour && a.end > hour) {
-                        description = deal.description;
-                        remaining = ((a.end - hour) * 60).toFixed(0) + " minutes left";
+                        var _remaining = ((a.end - hour) * 60).toFixed(0);
+                        var suffix = " minutes left";
+                        if (_remaining > 60) {
+                            _remaining = (_remaining / 60).toFixed(1);
+                            suffix = " hours left";
+                        }
+
+                        offers.push({
+                            description: deal.description,
+                            remaining: _remaining + suffix
+                        });
                     }
                 });
             });
@@ -28669,22 +28788,43 @@ var Info = function (_React$Component) {
                         "div",
                         { className: "location-info__header__title" },
                         this.props.location.name
-                    )
-                ),
-                _react2.default.createElement(
-                    "div",
-                    { className: "location-info__ttl" },
-                    _react2.default.createElement(
-                        "div",
-                        { className: "location-info__ttl__title" },
-                        description
                     ),
                     _react2.default.createElement(
                         "div",
-                        { className: "location-info__ttl__info" },
-                        remaining
+                        { className: "location-info__header__tags" },
+                        this.props.location.filter.join(", ")
                     )
-                )
+                ),
+                this.props.location.description ? _react2.default.createElement(
+                    "div",
+                    { className: "location-info__description hr" },
+                    _react2.default.createElement(
+                        "p",
+                        null,
+                        this.props.location.description
+                    )
+                ) : null,
+                offers.map(function (offer) {
+                    return _react2.default.createElement(
+                        "div",
+                        { className: "location-info__ttl hr" },
+                        _react2.default.createElement(
+                            "div",
+                            { className: "location-ingo__ttl__title" },
+                            "Happy hour"
+                        ),
+                        _react2.default.createElement(
+                            "div",
+                            { className: "location-info__ttl__description" },
+                            offer.description
+                        ),
+                        _react2.default.createElement(
+                            "div",
+                            { className: "location-info__ttl__ttl" },
+                            offer.remaining
+                        )
+                    );
+                })
             );
         }
     }]);
@@ -28694,7 +28834,7 @@ var Info = function (_React$Component) {
 
 exports.default = Info;
 
-},{"../stores/images.js":472,"react":466}],470:[function(require,module,exports){
+},{"../stores/images.js":474,"react":466}],471:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28716,6 +28856,14 @@ var _info2 = _interopRequireDefault(_info);
 
 var _locations = require("../stores/locations.js");
 
+var _modal = require("./modal.jsx");
+
+var _modal2 = _interopRequireDefault(_modal);
+
+var _filters = require("./filters.jsx");
+
+var _filters2 = _interopRequireDefault(_filters);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28734,7 +28882,7 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
 
         var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
 
-        _this.state = { info: null, loaded: false };
+        _this.state = { info: null, loaded: false, locked: true, filters: false };
         _this.locations = [];
         return _this;
     }
@@ -28752,7 +28900,6 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
                 navigationControl: false,
                 mapTypeControl: false,
                 scaleControl: false,
-                draggable: false,
                 styles: styles,
                 streetViewControl: false
             });
@@ -28763,6 +28910,9 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
                 map: this.map,
                 icon: image
             });
+
+            google.maps.event.addListener(this.map, 'dragstart', this.unlock.bind(this));
+            google.maps.event.addListener(this.map, 'dragend', this.dragged.bind(this));
 
             google.maps.event.addListener(this.map, 'tilesloaded', function (e) {
                 _this2.setState({ loaded: true });
@@ -28777,13 +28927,21 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
             var _this3 = this;
 
             var panPoint = new google.maps.LatLng(props.lat, props.lng);
-            this.map.panTo(panPoint);
+            if (this.state.locked) {
+                this.map.panTo(panPoint);
+            }
             this.clearLocations();
 
             this.marker.setPosition({ lat: props.lat, lng: props.lng });
             props.locations.forEach(function (loc) {
                 return _this3.processLocation(loc);
             });
+        }
+    }, {
+        key: "dragged",
+        value: function dragged() {
+            var center = this.map.getCenter();
+            _locations.LocationStore.add(center.lat(), center.lng());
         }
     }, {
         key: "clearLocations",
@@ -28818,18 +28976,44 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
             this.locations.push(marker);
         }
     }, {
+        key: "unlock",
+        value: function unlock() {
+            this.setState({ locked: false });
+        }
+    }, {
+        key: "recenter",
+        value: function recenter() {
+            this.setState({ locked: true });
+            var panPoint = new google.maps.LatLng(this.props.lat, this.props.lng);
+            this.map.panTo(panPoint);
+        }
+    }, {
+        key: "showFilter",
+        value: function showFilter() {
+            this.setState({ filters: true });
+        }
+    }, {
+        key: "hideFilter",
+        value: function hideFilter() {
+            this.setState({ filters: false });
+        }
+    }, {
         key: "render",
         value: function render() {
             var _this5 = this;
 
             return _react2.default.createElement(
                 "div",
-                null,
+                { className: "map" },
                 this.state.loaded ? _react2.default.createElement("div", { className: "banner" }) : null,
+                this.state.loaded && !this.props.highAccuracyObtained ? _react2.default.createElement(_modal2.default, { message: "We are getting your location (please make sure your GPS is on)..." }) : null,
                 _react2.default.createElement("div", { ref: function ref(o) {
                         return _this5.container = o;
                     }, className: "map-container" }),
-                this.state.info
+                this.state.info,
+                this.state.loaded ? _react2.default.createElement("div", { className: "map__center", onClick: this.recenter.bind(this) }) : null,
+                this.state.loaded ? _react2.default.createElement("div", { className: "map__filter", onClick: this.showFilter.bind(this) }) : null,
+                this.state.filters ? _react2.default.createElement(_filters2.default, { onClose: this.hideFilter.bind(this) }) : null
             );
         }
     }]);
@@ -28845,7 +29029,54 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
 
 exports.default = Map;
 
-},{"../stores/locations.js":473,"./info.jsx":469,"react":466}],471:[function(require,module,exports){
+},{"../stores/locations.js":475,"./filters.jsx":469,"./info.jsx":470,"./modal.jsx":472,"react":466}],472:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Modal = function (_React$Component) {
+    _inherits(Modal, _React$Component);
+
+    function Modal() {
+        _classCallCheck(this, Modal);
+
+        return _possibleConstructorReturn(this, (Modal.__proto__ || Object.getPrototypeOf(Modal)).apply(this, arguments));
+    }
+
+    _createClass(Modal, [{
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "div",
+                { className: "modal" },
+                this.props.message
+            );
+        }
+    }]);
+
+    return Modal;
+}(_react2.default.Component);
+
+exports.default = Modal;
+
+},{"react":466}],473:[function(require,module,exports){
 "use strict";
 
 var _app = require("./components/app.jsx");
@@ -28864,7 +29095,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _reactDom2.default.render(_react2.default.createElement(_app2.default, null), document.getElementById("root"));
 
-},{"./components/app.jsx":468,"react":466,"react-dom":323}],472:[function(require,module,exports){
+},{"./components/app.jsx":468,"react":466,"react-dom":323}],474:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28903,12 +29134,13 @@ function grabImage(map, lat, long) {
     });
 }
 
-},{}],473:[function(require,module,exports){
+},{}],475:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.LocationStore = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -28939,19 +29171,67 @@ var Locations = function () {
         this.lat = 0;
         this.lng = 0;
         this.locations = [];
+        this.filters = {};
+        this.highAccuracyObtained = false;
 
         this.onUpdateHandlers = [];
 
-        this.highAccuracyObtained = false;
-
         this.getGeneralCurrentPosition();
-
         this.getCurrentPosition().then(function () {
             _this.watchCurrentPosition();
         });
     }
 
     _createClass(Locations, [{
+        key: "getLocations",
+        value: function getLocations() {
+            var _this2 = this;
+
+            var results = [];
+            var hasFilters = false;
+            this.locations.forEach(function (loc) {
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = Object.keys(_this2.filters)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var key = _step.value;
+
+                        if (_this2.filters[key]) {
+                            hasFilters = true;
+                            if (loc.filter.includes(key)) {
+                                results.push(loc);
+                                break;
+                            }
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            });
+            return hasFilters ? results : this.locations;
+        }
+    }, {
+        key: "toggleFilter",
+        value: function toggleFilter(filter, value) {
+            this.filters[filter] = value;
+            this.onUpdateHandlers.forEach(function (func) {
+                return func();
+            });
+        }
+    }, {
         key: "onUpdate",
         value: function onUpdate(func) {
             this.onUpdateHandlers.push(func);
@@ -28959,26 +29239,47 @@ var Locations = function () {
     }, {
         key: "pull",
         value: function pull() {
-            var _this2 = this;
-
-            return (0, _ajax.Post)("https://tippleldn.tech/data.json", JSON.stringify({ lat: this.lat, long: this.lng })).then(function (results) {
-                return JSON.parse(results);
-            }).then(function (results) {
-                _this2.locations = results.locations;
-            });
+            return this.add(this.lat, this.lng);
         }
     }, {
-        key: "updateLocation",
-        value: function updateLocation(loc) {
+        key: "add",
+        value: function add(lat, lng) {
             var _this3 = this;
 
-            this.lat = loc.coords.latitude;
-            this.lng = loc.coords.longitude;
-            this.pull().then(function () {
+            return (0, _ajax.Post)("https://tippleldn.tech/data.json", JSON.stringify({ lat: lat, long: lng })).then(function (results) {
+                return JSON.parse(results);
+            }).then(function (results) {
+                return _this3.merge(results.locations);
+            }).then(function () {
                 _this3.onUpdateHandlers.forEach(function (func) {
                     return func();
                 });
             });
+        }
+    }, {
+        key: "merge",
+        value: function merge(results) {
+            this.locations.forEach(function (existing) {
+                var overwrite = false;
+                results.forEach(function (pulled) {
+                    if (existing.name == pulled.name) {
+                        overwrite = true;
+                    }
+                });
+
+                if (!overwrite) {
+                    results.push(existing);
+                }
+            });
+
+            this.locations = results;
+        }
+    }, {
+        key: "updateLocation",
+        value: function updateLocation(loc) {
+            this.lat = loc.coords.latitude;
+            this.lng = loc.coords.longitude;
+            this.pull();
         }
     }, {
         key: "getGeneralCurrentPosition",
@@ -29025,6 +29326,7 @@ var Locations = function () {
 
 var LocationStore = new Locations();
 
+exports.LocationStore = LocationStore;
 exports.default = LocationStore;
 function ProvideLocations(Elem) {
     return function (_React$Component) {
@@ -29044,7 +29346,7 @@ function ProvideLocations(Elem) {
         _createClass(Provider, [{
             key: "render",
             value: function render() {
-                return _react2.default.createElement(Elem, _extends({}, this.props, { locations: LocationStore.locations, lat: LocationStore.lat, lng: LocationStore.lng }));
+                return _react2.default.createElement(Elem, _extends({}, this.props, { highAccuracyObtained: LocationStore.highAccuracyObtained, locations: LocationStore.getLocations(), lat: LocationStore.lat, lng: LocationStore.lng }));
             }
         }]);
 
@@ -29052,7 +29354,7 @@ function ProvideLocations(Elem) {
     }(_react2.default.Component);
 }
 
-},{"../utils/ajax.js":474,"react":466}],474:[function(require,module,exports){
+},{"../utils/ajax.js":476,"react":466}],476:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29089,4 +29391,4 @@ var Post = exports.Post = function Post(url, data) {
     return Ajax("POST", url, data);
 };
 
-},{}]},{},[471])
+},{}]},{},[473])

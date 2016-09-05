@@ -4,4 +4,4 @@ COPY ./Caddyfile /etc/Caddyfile
 COPY landing/ /html
 COPY dist/ /html/dist
 COPY public/ /html/public
-COPY app.html /html/app.htmls
+COPY app.html /html/app.html

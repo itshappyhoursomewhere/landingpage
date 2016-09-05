@@ -6,13 +6,12 @@ class Locations {
         this.lat = 0;
         this.lng = 0;
         this.locations = [];
+        this.filters = {};
+        this.highAccuracyObtained = false;
 
         this.onUpdateHandlers = [];
 
-        this.highAccuracyObtained = false;
-
         this.getGeneralCurrentPosition()
-
         this.getCurrentPosition().then(
             () => {
                 this.watchCurrentPosition()
@@ -20,26 +19,69 @@ class Locations {
         )
     }
 
+    getLocations() {
+        let results = [];
+        let hasFilters = false;
+        this.locations.forEach((loc) => {
+            for (let key of Object.keys(this.filters)) {
+                if (this.filters[key]) {
+                    hasFilters = true;
+                    if (loc.filter.includes(key)) {
+                        results.push(loc);
+                        break;
+                    }
+                }
+            }
+        })
+        return hasFilters ? results : this.locations;
+    }
+    
+    toggleFilter(filter, value) {
+        this.filters[filter] = value;
+        this.onUpdateHandlers.forEach((func) => func());        
+    }
+
     onUpdate(func) {
         this.onUpdateHandlers.push(func)
     }
 
     pull() {
-        return Post("https://tippleldn.tech/data.json", JSON.stringify({lat: this.lat, long: this.lng})).then(
+        return this.add(this.lat, this.lng)
+    }
+
+    add(lat, lng) {
+        return Post("https://tippleldn.tech/data.json", JSON.stringify({lat: lat, long: lng})).then(
             (results) => JSON.parse(results)
         ).then(
-            (results) => {this.locations = results.locations} 
-        )
+            (results) => this.merge(results.locations)
+        ).then(
+            () => {
+                this.onUpdateHandlers.forEach((func) => func());
+            }
+        );
+    }
+
+    merge(results) {
+        this.locations.forEach((existing) => {
+            let overwrite = false;
+            results.forEach((pulled) => {
+                if (existing.name == pulled.name) {
+                    overwrite = true;
+                }
+            });
+
+            if (!overwrite) {
+                results.push(existing)
+            }
+        })
+
+        this.locations = results;
     }
 
     updateLocation(loc) {
         this.lat = loc.coords.latitude
         this.lng = loc.coords.longitude
-        this.pull().then(
-            () => {
-                this.onUpdateHandlers.forEach((func) => func());
-            }
-        );
+        this.pull()
     }
 
     getGeneralCurrentPosition() {
@@ -88,7 +130,8 @@ class Locations {
 
 const LocationStore = new Locations();
 
-export default LocationStore
+export {LocationStore};
+export default LocationStore;
 
 export function ProvideLocations(Elem) {
     return class Provider extends React.Component {
@@ -99,7 +142,7 @@ export function ProvideLocations(Elem) {
         }
 
         render() {
-            return <Elem {...this.props} locations={LocationStore.locations} lat={LocationStore.lat} lng={LocationStore.lng} />;
+            return <Elem {...this.props} highAccuracyObtained={LocationStore.highAccuracyObtained} locations={LocationStore.getLocations()} lat={LocationStore.lat} lng={LocationStore.lng} />;
         }
     }
 }

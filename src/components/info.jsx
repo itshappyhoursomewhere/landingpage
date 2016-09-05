@@ -37,13 +37,24 @@ export default class Info extends React.Component {
         let day = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][now.getDay()];
         let hour = now.getHours() + (now.getMinutes()/60);
 
+        let offers = []
+
         let description = "";
         let remaining = "No deals right now!"
         this.props.location.deals.forEach((deal) => {
             deal.active.forEach((a) => {
                 if (a.day == day && a.start < hour && a.end > hour) {
-                    description = deal.description;
-                    remaining = ((a.end - hour)*60).toFixed(0) + " minutes left";
+                    let remaining = ((a.end - hour)*60).toFixed(0);
+                    let suffix = " minutes left" 
+                    if (remaining > 60) {
+                        remaining = (remaining/60).toFixed(1); 
+                        suffix = " hours left"
+                    }
+
+                    offers.push({
+                        description: deal.description,
+                        remaining: remaining + suffix
+                    });
                 } 
             })
         })
@@ -59,15 +70,32 @@ export default class Info extends React.Component {
                     <div className="location-info__header__title">
                         {this.props.location.name}
                     </div>
-                </div>
-                <div className="location-info__ttl">
-                    <div className="location-info__ttl__title">
-                        {description}
-                    </div>
-                    <div className="location-info__ttl__info">
-                        {remaining}
+                    <div className="location-info__header__tags">
+                        {this.props.location.filter.join(", ")}
                     </div>
                 </div>
+                
+                {this.props.location.description ? 
+                    <div className="location-info__description hr">
+                        <p>{this.props.location.description}</p>
+                    </div>
+                    : null
+                }
+
+                {offers.map((offer) => 
+                    <div className="location-info__ttl hr">
+                        <div className="location-ingo__ttl__title">
+                            Happy hour
+                        </div>
+                        <div className="location-info__ttl__description">
+                            {offer.description}
+                        </div>
+                        <div className="location-info__ttl__ttl">
+                            {offer.remaining}
+                        </div>
+                    </div>
+                )}
+                
             </div>
         );
     }
