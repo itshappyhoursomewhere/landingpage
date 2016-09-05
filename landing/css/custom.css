@@ -1,17 +1,40 @@
 /* Custom CSS */
 
 body {
+    background-color: #000;
+}
+
+body::before {
+    background-image: url(/img/bar.jpeg);
+    z-index:-2;
+    background-size: cover;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0.5;
+    content: '';
+    -webkit-filter: blur(2px);
+    filter        : blur(2px);
 }
 
 h1, h2, h3, h4, h5, h6 {
 	font-family: 'Roboto', sans-serif;
+    font-style: 'Regular';
+}
+
+h4 {
+    line-height:1.6; 
 }
 
 p, div {
 	font-family: 'Roboto', sans-serif;
+    font-style: 'Regular';
 }
 
 #background {
+    z-index:-1;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -19,11 +42,16 @@ p, div {
     min-height: 100%;
     width: auto;
     height: auto;
-    z-index: -100;
     -webkit-transform: translateX(-50%) translateY(-50%);
     transform: translateX(-50%) translateY(-50%);
     background: url(polina.jpg) no-repeat;
     background-size: cover;
+    -webkit-filter: blur(15px);
+    -moz-filter: blur(15px);
+    -o-filter: blur(15px);
+    -ms-filter: blur(15px);
+    filter: blur(20px);
+
 }
 
 .row1 {
@@ -39,7 +67,7 @@ p, div {
 }
 
 #img-logo {
-	height:75px;
+	height:30px;
 }
 
 #input-email {
@@ -59,8 +87,39 @@ p, div {
 	max-width: 30%;
 }
 
-.btn-email {
+.btn-social {
 	max-width: 49%;
     margin-top:10px;
     margin-bottom:20px;
+}
+
+.btn-sign {
+    font-size: 14px;
+    border-radius: 0px;
+    width:50%;
+}
+
+.break {
+    height:10px;
+}
+
+.white {
+    color: white;
+}
+
+.icon-custom {
+    font-size:25px;
+    text-align:center;
+}
+
+.right {
+    float:right;
+}
+
+.pad {
+    padding-right:10px;
+}
+
+.img-height : {
+    height: 100px;
 }
