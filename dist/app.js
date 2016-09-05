@@ -28748,7 +28748,9 @@ var Info = function (_React$Component) {
         key: "render",
         value: function render() {
             var now = new Date();
-            var day = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][now.getDay()];
+            var days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+            var day = days[now.getDay()];
+            var tomorrow = now.getDay() == 6 ? "sunday" : days[now.getDay() + 1];
             var hour = now.getHours() + now.getMinutes() / 60;
 
             var offers = [];
@@ -28757,17 +28759,40 @@ var Info = function (_React$Component) {
             var remaining = "No deals right now!";
             this.props.location.deals.forEach(function (deal) {
                 deal.active.forEach(function (a) {
-                    if (a.day == day && a.start < hour && a.end > hour) {
-                        var _remaining = ((a.end - hour) * 60).toFixed(0);
-                        var suffix = " minutes left";
-                        if (_remaining > 60) {
-                            _remaining = (_remaining / 60).toFixed(1);
-                            suffix = " hours left";
+                    if (a.day == day) {
+                        if (a.start < hour && a.end > hour) {
+                            var _remaining = ((a.end - hour) * 60).toFixed(0);
+                            var suffix = " minutes left";
+                            if (_remaining > 60) {
+                                _remaining = (_remaining / 60).toFixed(1);
+                                suffix = " hours left";
+                            }
+
+                            offers.push({
+                                description: deal.description,
+                                remaining: _remaining + suffix
+                            });
+                        } else if (a.start > hour) {
+                            var _remaining2 = ((a.start - hour) * 60).toFixed(0);
+                            var _suffix = " minutes";
+                            if (_remaining2 > 60) {
+                                _remaining2 = (_remaining2 / 60).toFixed(1);
+                                _suffix = " hours";
+                            }
+
+                            offers.push({
+                                description: deal.description,
+                                remaining: "starts in " + _remaining2 + _suffix
+                            });
                         }
+                    } else if (a.day == tomorrow) {
+                        var h = Math.floor(a.start);
+                        var m = ((a.start - h) * 60).toFixed();
+                        var time = h + ":" + (m < 10 ? "0" + m : m);
 
                         offers.push({
                             description: deal.description,
-                            remaining: _remaining + suffix
+                            remaining: "tomorrow at " + time
                         });
                     }
                 });
@@ -28777,6 +28802,9 @@ var Info = function (_React$Component) {
             if (this.state.image) {
                 style = { backgroundImage: "url(" + this.state.image + ")" };
             }
+
+            var url = this.props.location.website.startsWith("http") ? this.props.location.website : "//" + this.props.location.website;
+
             return _react2.default.createElement(
                 "div",
                 { className: "location-info" },
@@ -28795,6 +28823,20 @@ var Info = function (_React$Component) {
                         this.props.location.filter.join(", ")
                     )
                 ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "location-info__buttons" },
+                    this.props.location.phone ? _react2.default.createElement(
+                        "a",
+                        { className: "location-info__buttons__call", href: "tel:" + this.props.location.phone },
+                        "Call"
+                    ) : null,
+                    url ? _react2.default.createElement(
+                        "a",
+                        { className: "location-info__buttons__website", href: url, target: "_blank" },
+                        "Website"
+                    ) : null
+                ),
                 this.props.location.description ? _react2.default.createElement(
                     "div",
                     { className: "location-info__description hr" },
@@ -28804,10 +28846,10 @@ var Info = function (_React$Component) {
                         this.props.location.description
                     )
                 ) : null,
-                offers.map(function (offer) {
+                offers.map(function (offer, i) {
                     return _react2.default.createElement(
                         "div",
-                        { className: "location-info__ttl hr" },
+                        { key: "offer_" + i, className: "location-info__ttl hr" },
                         _react2.default.createElement(
                             "div",
                             { className: "location-ingo__ttl__title" },

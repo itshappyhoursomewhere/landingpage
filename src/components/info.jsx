@@ -34,7 +34,9 @@ export default class Info extends React.Component {
 
     render() {
         let now = new Date();
-        let day = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][now.getDay()];
+        let days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+        let day = days[now.getDay()];
+        let tomorrow = now.getDay() == 6 ? "sunday" : days[now.getDay()+1]
         let hour = now.getHours() + (now.getMinutes()/60);
 
         let offers = []
@@ -43,19 +45,42 @@ export default class Info extends React.Component {
         let remaining = "No deals right now!"
         this.props.location.deals.forEach((deal) => {
             deal.active.forEach((a) => {
-                if (a.day == day && a.start < hour && a.end > hour) {
-                    let remaining = ((a.end - hour)*60).toFixed(0);
-                    let suffix = " minutes left" 
-                    if (remaining > 60) {
-                        remaining = (remaining/60).toFixed(1); 
-                        suffix = " hours left"
+                if (a.day == day) {
+                    if (a.start < hour && a.end > hour) {
+                        let remaining = ((a.end - hour)*60).toFixed(0);
+                        let suffix = " minutes left" 
+                        if (remaining > 60) {
+                            remaining = (remaining/60).toFixed(1); 
+                            suffix = " hours left"
+                        }
+
+                        offers.push({
+                            description: deal.description,
+                            remaining: remaining + suffix
+                        });
+                    } else if (a.start > hour) {
+                        let remaining = ((a.start - hour)*60).toFixed(0);
+                        let suffix = " minutes" 
+                        if (remaining > 60) {
+                            remaining = (remaining/60).toFixed(1); 
+                            suffix = " hours"
+                        }
+
+                        offers.push({
+                            description: deal.description,
+                            remaining: "starts in " + remaining + suffix                                                         
+                        })
                     }
+                } else if (a.day == tomorrow) {
+                    let h = Math.floor(a.start)
+                    let m = ((a.start - h) * 60).toFixed()
+                    let time = h + ":" + (m < 10 ? "0" + m : m)
 
                     offers.push({
                         description: deal.description,
-                        remaining: remaining + suffix
-                    });
-                } 
+                        remaining: "tomorrow at " + time                                                        
+                    })
+                }
             })
         })
 
@@ -63,6 +88,11 @@ export default class Info extends React.Component {
         if (this.state.image) {
             style = {backgroundImage: "url(" + this.state.image + ")"}        
         }
+
+        let url = this.props.location.website.startsWith("http") ?
+            this.props.location.website : "//" + this.props.location.website;
+
+
         return (
             <div className="location-info">
                 <div className="location-info__back" onClick={this.props.onClose} />
@@ -74,6 +104,15 @@ export default class Info extends React.Component {
                         {this.props.location.filter.join(", ")}
                     </div>
                 </div>
+
+                <div className="location-info__buttons">
+                    {this.props.location.phone ? 
+                        <a className="location-info__buttons__call" href={"tel:" + this.props.location.phone}>Call</a>
+                    :null }
+                    {url ? 
+                        <a className="location-info__buttons__website" href={url} target="_blank">Website</a>
+                    :null }
+                </div>
                 
                 {this.props.location.description ? 
                     <div className="location-info__description hr">
@@ -82,8 +121,8 @@ export default class Info extends React.Component {
                     : null
                 }
 
-                {offers.map((offer) => 
-                    <div className="location-info__ttl hr">
+                {offers.map((offer, i) => 
+                    <div key={"offer_" + i} className="location-info__ttl hr">
                         <div className="location-ingo__ttl__title">
                             Happy hour
                         </div>
