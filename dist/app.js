@@ -29003,11 +29003,13 @@ var Map = (0, _locations.ProvideLocations)(_class = (_temp = _class2 = function 
         value: function processLocation(loc) {
             var _this4 = this;
 
-            console.log("Adding location", loc);
+            var icon = loc.icon ? loc.icon : "Multiple";
+            var iconName = loc.inOffer ? icon + "_promo" : icon;
+
             var marker = new google.maps.Marker({
                 position: { lat: loc.geo.lat, lng: loc.geo.long },
                 map: this.map,
-                icon: loc.icon ? 'https://tippleldn.tech/public/' + loc.icon + '.png' : 'https://tippleldn.tech/public/Multiple.png',
+                icon: 'https://tippleldn.tech/public/' + iconName + '.png',
                 zIndex: 100
             });
 
@@ -29314,7 +29316,29 @@ var Locations = function () {
                 }
             });
 
+            results.forEach(this.additional);
+
             this.locations = results;
+        }
+    }, {
+        key: "additional",
+        value: function additional(loc) {
+            var now = new Date();
+            var days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+            var day = days[now.getDay()];
+            var hour = now.getHours() + now.getMinutes() / 60;
+            var inOffer = false;
+            loc.deals.forEach(function (deal) {
+                deal.active.forEach(function (a) {
+                    if (a.day == day) {
+                        if (a.start < hour && a.end > hour) {
+                            inOffer = true;
+                        }
+                    }
+                });
+            });
+
+            loc.inOffer = true;
         }
     }, {
         key: "updateLocation",

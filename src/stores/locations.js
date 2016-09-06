@@ -75,7 +75,28 @@ class Locations {
             }
         })
 
+        results.forEach(this.additional);
+
         this.locations = results;
+    }
+
+    additional(loc) {
+        let now = new Date();
+        let days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+        let day = days[now.getDay()];
+        let hour = now.getHours() + (now.getMinutes()/60);
+        let inOffer = false
+        loc.deals.forEach((deal) => {
+            deal.active.forEach((a) => {
+                if (a.day == day) {
+                    if (a.start < hour && a.end > hour) {
+                        inOffer = true          
+                    }
+                }
+            })
+        })
+
+        loc.inOffer = true;
     }
 
     updateLocation(loc) {

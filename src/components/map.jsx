@@ -79,11 +79,13 @@ export default class Map extends React.Component {
     }
 
     processLocation(loc) {
-        console.log("Adding location", loc)
+        let icon = loc.icon ? loc.icon : "Multiple";
+        let iconName = loc.inOffer ? icon + "_promo" : icon;
+
         var marker = new google.maps.Marker({
           position: {lat: loc.geo.lat, lng: loc.geo.long},
           map: this.map,
-          icon: loc.icon ? 'https://tippleldn.tech/public/' + loc.icon + '.png' : 'https://tippleldn.tech/public/Multiple.png', 
+          icon: 'https://tippleldn.tech/public/' + iconName + '.png', 
           zIndex: 100
         });
 
