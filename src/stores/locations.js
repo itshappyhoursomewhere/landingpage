@@ -86,6 +86,7 @@ class Locations {
         let day = days[now.getDay()];
         let hour = now.getHours() + (now.getMinutes()/60);
         let inOffer = false
+
         loc.deals.forEach((deal) => {
             deal.active.forEach((a) => {
                 if (a.day == day) {
@@ -96,7 +97,7 @@ class Locations {
             })
         })
 
-        loc.inOffer = true;
+        loc.inOffer = inOffer;
     }
 
     updateLocation(loc) {
