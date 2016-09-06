@@ -89,10 +89,8 @@ class Locations {
 
         loc.deals.forEach((deal) => {
             deal.active.forEach((a) => {
-                if (a.day == day) {
-                    if (a.start < hour && a.end > hour) {
-                        inOffer = true          
-                    }
+                if (a.day == day && a.start < hour && a.end > hour) {
+                    inOffer = true          
                 }
             })
         })

@@ -29328,17 +29328,16 @@ var Locations = function () {
             var day = days[now.getDay()];
             var hour = now.getHours() + now.getMinutes() / 60;
             var inOffer = false;
+
             loc.deals.forEach(function (deal) {
                 deal.active.forEach(function (a) {
-                    if (a.day == day) {
-                        if (a.start < hour && a.end > hour) {
-                            inOffer = true;
-                        }
+                    if (a.day == day && a.start < hour && a.end > hour) {
+                        inOffer = true;
                     }
                 });
             });
 
-            loc.inOffer = true;
+            loc.inOffer = inOffer;
         }
     }, {
         key: "updateLocation",
