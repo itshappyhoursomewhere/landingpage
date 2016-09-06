@@ -29165,7 +29165,7 @@ function grabImage(map, lat, long) {
                 rej(new Error(status));
             }
         };
-        service.nearbySearch({ location: new google.maps.LatLng(lat, long), radius: 10 }, callback);
+        service.nearbySearch({ location: new google.maps.LatLng(lat, long), radius: 10, type: "establishment" }, callback);
     });
 
     return get.then(function (result) {
